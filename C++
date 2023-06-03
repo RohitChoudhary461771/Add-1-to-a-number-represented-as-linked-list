@@ -1,0 +1,122 @@
+//{ Driver Code Starts
+//Initial template for C++
+
+#include <bits/stdc++.h> 
+using namespace std; 
+
+struct Node
+{
+    int data;
+    struct Node* next;
+    
+    Node(int x){
+        data = x;
+        next = NULL;
+    }
+};
+
+void printList(Node* node) 
+{ 
+    while (node != NULL) { 
+        cout << node->data; 
+        node = node->next; 
+    }  
+    cout<<"\n";
+} 
+
+
+// } Driver Code Ends
+//User function template for C++
+
+/* 
+
+struct Node
+{
+    int data;
+    struct Node* next;
+    
+    Node(int x){
+        data = x;
+        next = NULL;
+    }
+};
+
+*/
+
+class Solution
+{
+    public:
+    
+    Node* reverse(Node* head){
+        Node* prev=NULL;
+        
+        while(head!=NULL){
+            Node* node=head->next;
+            head->next=prev;
+            prev=head;
+            head=node;
+        }
+        return prev;
+    }
+    Node* addOne(Node *head) //👉 given head->> 4->5->6->NULL 
+    {   //reverse a linke list
+       Node* temp=reverse(head);//👉  After reversing 6->5->4->NULL
+      
+        int  carry=1;//👉  to add one 
+        int sum=0;
+       Node* copy=temp; 
+        
+        while(temp->next!=NULL){//👉  running the loop prior the NULL value i.e. till 4 
+        
+                                //👉 Dry run-----------------------------------------------------------------------------------------
+            sum=carry+temp->data;   //|1> sum=1+temp->data(6)     |2> sum=0+temp->data(5)    |3> as temp->next(4->NULL) is null loop gots end
+            carry=sum/10;           //|   carry=7/10 ->(0)        |   carry=5/10             |
+            sum=sum%10;             //|   sum=7%10   ->(7)        |   sum=5%10               |
+                                    //|                           |                          |
+            temp->data=sum;         //|change 6 to 7              |change 5 to 5             |
+                                    //|                           |                          |
+            temp=temp->next;        //|moving temp to next value  |moving temp to next value |
+        }
+        
+        int n=temp->data+carry;     //|n=4+carry(0)
+        carry=n/10;                 //|carry=4/10 ==>0
+        n=n%10;
+        temp->data=n;               //|change 4 to 4
+        
+        if(carry>0){                //|if still their is some value in the carry generate the new node and add it next value (This is for edge case)
+          Node*node=new Node(carry);//|if given head value is 4999 then this if condition will work .
+            temp->next=node;
+            return reverse(copy);   
+        }
+        
+        return reverse(copy);|then reverse the value from 7->5->4 to 4->5->7 and return it.
+       
+    }
+};
+
+//{ Driver Code Starts.
+
+int main() 
+{ 
+    int t;
+    cin>>t;
+    while(t--)
+    {
+        string s;
+        cin>>s;
+        
+        Node* head = new Node( s[0]-'0' );
+        Node* tail = head;
+        for(int i=1; i<s.size(); i++)
+        {
+            tail->next = new Node( s[i]-'0' );
+            tail = tail->next;
+        }
+        Solution ob;
+        head = ob.addOne(head);
+        printList(head); 
+    }
+    return 0; 
+} 
+
+// } Driver Code Ends
